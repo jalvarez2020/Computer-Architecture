@@ -5,17 +5,17 @@ import sys
 class CPU:
     """Main CPU class."""
 
-    def __init__(self):
+    def __init__(self): 
         """Construct a new CPU."""
-        pass
+        self.ram = [0] * 256
+        self.reg = [0] * 8
+        self.pc = self.reg[0]
 
     def load(self):
         """Load a program into memory."""
-
         address = 0
 
         # For now, we've just hardcoded a program:
-
         program = [
             # From print8.ls8
             0b10000010, # LDI R0,8
@@ -30,8 +30,14 @@ class CPU:
             self.ram[address] = instruction
             address += 1
 
+    def ram_read(self, RAM):
+        return self.ram[RAM]
 
-    def alu(self, op, reg_a, reg_b):
+    def ram_write(self, RAM, WRAM):
+        self.ram[RAM] = WRAM
+
+
+    def alu(self, op, reg_a, reg_b): #Arithmetic Logic Unit: fundamental block of central processing unit
         """ALU operations."""
 
         if op == "ADD":
@@ -40,7 +46,7 @@ class CPU:
         else:
             raise Exception("Unsupported ALU operation")
 
-    def trace(self):
+    def trace(self): #
         """
         Handy function to print out the CPU state. You might want to call this
         from run() if you need help debugging.
@@ -62,4 +68,25 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+        self.trace()
+        LDI = 0b10000010
+        PRN = 0b01000111
+        HLT = 0b00000001
+
+        running = True
+
+        while running:
+            IR = self.ram[self.pc]
+
+            operand_a = self.ram_read(self.pc + 1)
+            operand_b = self.ram_read(self.pc + 2)
+
+            if IR == LDI:
+                self.reg[operand_a] = operand_b
+                self.pc += 3
+            elif IR == PRN:
+                print(self.reg[operand_a])
+                self.pc += 2
+            elif IR == HLT:
+                running = False
+        self.trace()

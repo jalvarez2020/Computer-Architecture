@@ -48,7 +48,7 @@ This code above requires the implementation of three instructions:
 
 See [the LS-8 spec](../LS8-spec.md) for more details.
 
-The above program is already hardcoded into the source file `cpu.py`. To run it,
+The above program is already hard coded into the source file `cpu.py`. To run it,
 you will eventually:
 
 ```
